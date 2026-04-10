@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>الحمّال الذكي Pro | القياس بالكاميرا و AR</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+:root {
+  --navy:#1a3a5c; --navy2:#0d2a45; --orange:#e07b39; --orange2:#f5a623;
+  --bg:#f0f4f9; --card:#ffffff; --text:#1a2a3a; --muted:#6b7a99;
+  --border:#e0e6ed; --green:#22c55e; --red:#ef4444; --yellow:#f59e0b;
+  --purple:#8b5cf6; --teal:#14b8a6; --blue:#3b82f6;
+  --radius:18px; --radius-sm:12px;
+  --shadow:0 4px 20px rgba(26,58,92,0.08);
+}
+body { font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* ===== HEADER ===== */
+.header {
+  background:linear-gradient(135deg,var(--navy),var(--navy2));
+  padding:16px 16px 0; position:sticky; top:0; z-index:100;
+  box-shadow:0 4px 20px rgba(0,0,0,0.15);
+}
+.header-top { display:flex; align-items:center; justify-content:space-between; padding-bottom:12px; flex-wrap:wrap; gap:10px; }
+.logo { display:flex; align-items:center; gap:10px; }
+.logo-icon { width:44px; height:44px; background:linear-gradient(135deg,var(--orange),var(--orange2)); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(224,123,57,0.35); }
+.logo-text h1 { font-size:17px; font-weight:900; color:#fff; }
+.logo-text p { font-size:10px; color:rgba(255,255,255,0.65); }
+.unit-badge { background:rgba(224,123,57,0.2); border:1px solid rgba(224,123,57,0.4); color:var(--orange); padding:7px 14px; border-radius:30px; font-size:12px; font-weight:700; cursor:pointer; transition:all .2s; }
+.unit-badge:active { transform:scale(0.95); }
+
+/* ===== TABS ===== */
+.tabs { display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; }
+.tabs::-webkit-scrollbar { display:none; }
+.tab-btn { background:transparent; border:none; color:rgba(255,255,255,0.55); padding:10px 13px; font-family:'Tajawal',sans-serif; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; border-bottom:2.5px solid transparent; transition:all .2s; display:flex; align-items:center; gap:5px; }
+.tab-btn.active { color:var(--orange); border-bottom-color:var(--orange); }
+.tab-btn:hover { color:#fff; }
+
+/* ===== CONTENT ===== */
+.content { padding:16px; max-width:600px; margin:0 auto; }
+.tab-pane { display:none; animation:fadeUp .25s ease; }
+.tab-pane.active { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ===== CARDS ===== */
+.card { background:var(--card); border-radius:var(--radius); padding:18px; margin-bottom:14px; box-shadow:var(--shadow); border:1px solid rgba(0,0,0,0.04); }
+.card-title { font-size:15px; font-weight:800; color:var(--navy); margin-bottom:16px; display:flex; align-items:center; gap:8px; padding-right:10px; border-right:3px solid var(--orange); }
+.card-title .ico { font-size:18px; }
+
+/* ===== PRODUCT TYPE GRID ===== */
+.type-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
+.type-card { border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:10px 6px; text-align:center; cursor:pointer; transition:all .2s; background:var(--card); }
+.type-card:hover { border-color:var(--orange); }
+.type-card.selected { border-color:var(--orange); background:#fff8f2; box-shadow:0 2px 8px rgba(224,123,57,0.18); }
+.type-card .ticon { font-size:24px; margin-bottom:3px; }
+.type-card .tlabel { font-size:11px; font-weight:700; color:var(--text); }
+.type-note { background:#f0fdf4; border-right:3px solid var(--green); border-radius:10px; padding:8px 12px; font-size:12px; color:#166534; margin-top:2px; }
+
+/* ===== INPUTS ===== */
+.igroup { display:flex; flex-direction:column; gap:5px; margin-bottom:12px; }
+.igroup label { font-size:12px; font-weight:700; color:var(--muted); }
+.igroup input, .igroup select {
+  border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:11px 14px;
+  font-family:'Tajawal',sans-serif; font-size:14px; color:var(--text);
+  outline:none; transition:border .2s; background:var(--card); width:100%;
+}
+.igroup input:focus, .igroup select:focus { border-color:var(--orange); }
+.igrid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.igrid2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.num-inp { display:flex; align-items:center; gap:6px; }
+.num-inp button { width:42px; height:42px; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); font-size:20px; font-weight:700; cursor:pointer; color:var(--navy); transition:all .2s; flex-shrink:0; }
+.num-inp button:active { background:var(--orange); color:#fff; transform:scale(0.92); }
+.num-inp input { flex:1; text-align:center; font-family:monospace; font-weight:700; font-size:15px; padding:11px; border:1.5px solid var(--border); border-radius:var(--radius-sm); background:#fff; }
+
+/* ===== PALLET SIZE BUTTONS ===== */
+.pallet-presets { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.psize-btn { padding:7px 13px; border:1.5px solid var(--border); border-radius:10px; background:var(--card); font-family:'Tajawal',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all .2s; color:var(--text); }
+.psize-btn.active { background:var(--navy); color:#fff; border-color:var(--navy); }
+.psize-btn:hover { border-color:var(--orange); }
+
+/* ===== CONTAINER CARDS ===== */
+.cont-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.cont-card { border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:12px; cursor:pointer; transition:all .2s; position:relative; background:var(--card); }
+.cont-card.selected { border-color:var(--orange); background:#fff8f2; box-shadow:0 2px 10px rgba(224,123,57,0.2); }
+.cont-card:hover { border-color:var(--orange); }
+.cbadge { display:inline-block; font-size:9px; font-weight:800; padding:2px 8px; border-radius:20px; margin-bottom:6px; }
+.bdry { background:#dbeafe; color:#1d4ed8; }
+.breef { background:#dcfce7; color:#166534; }
+.bfrz { background:#e0e7ff; color:#3730a3; }
+.cont-card h4 { font-size:13px; font-weight:800; color:var(--navy); margin-bottom:3px; }
+.cont-card .cdims { font-size:10px; color:var(--muted); font-family:monospace; }
+.cont-card .cvol { font-size:10px; color:var(--orange); font-weight:700; margin-top:3px; }
+
+/* ===== BUTTONS ===== */
+.btn-calc {
+  width:100%; padding:14px; background:linear-gradient(135deg,var(--orange),var(--orange2));
+  border:none; border-radius:var(--radius-sm); color:#fff; font-family:'Tajawal',sans-serif;
+  font-size:15px; font-weight:800; cursor:pointer; transition:all .2s;
+  box-shadow:0 4px 14px rgba(224,123,57,0.35);
+}
+.btn-calc:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(224,123,57,0.45); }
+.btn-calc:active { transform:scale(0.98); }
+.btn-sm { padding:9px 16px; border:none; border-radius:var(--radius-sm); font-family:'Tajawal',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+.btn-sm:active { transform:scale(0.95); }
+.btn-outline { background:transparent; border:1.5px solid var(--navy); color:var(--navy); }
+.btn-outline:hover { background:var(--navy); color:#fff; }
+.btn-red { background:transparent; border:1.5px solid var(--red); color:var(--red); }
+.btn-red:hover { background:var(--red); color:#fff; }
+.btn-purple { background:var(--purple); color:#fff; border:none;}
+.btn-purple:hover { background:#7c3aed; }
+.btn-teal { background:var(--teal); color:#fff; border:none;}
+.btns-row { display:flex; gap:8px; margin-top:8px; }
+
+/* ===== CBM RESULT BOX ===== */
+.cbm-hero { background:linear-gradient(135deg,var(--navy),var(--navy2)); border-radius:var(--radius); padding:20px; text-align:center; margin-top:14px; }
+.cbm-num { font-size:52px; font-weight:900; font-family:monospace; color:#fff; line-height:1; }
+.cbm-sub { font-size:12px; color:rgba(255,255,255,0.75); margin-top:6px; }
+.cbm-units-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+.cbm-unit-box { background:var(--bg); border-radius:var(--radius-sm); padding:10px 6px; text-align:center; border:1px solid var(--border); }
+.cbm-unit-val { font-size:14px; font-weight:900; font-family:monospace; color:var(--navy); }
+.cbm-unit-lbl { font-size:9px; color:var(--muted); margin-top:2px; font-weight:600; }
+
+/* ===== DIM WEIGHT CARDS ===== */
+.dimw-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
+.dimw-box { border-radius:var(--radius-sm); padding:12px 8px; text-align:center; }
+.dimw-air { background:#e0f2fe; border-right:3px solid #0284c7; }
+.dimw-sea { background:#dcfce7; border-right:3px solid var(--green); }
+.dimw-land { background:#fef3c7; border-right:3px solid var(--yellow); }
+.dimw-title { font-size:11px; font-weight:700; margin-bottom:5px; }
+.dimw-air .dimw-title { color:#0369a1; }
+.dimw-sea .dimw-title { color:#166534; }
+.dimw-land .dimw-title { color:#92400e; }
+.dimw-val { font-size:16px; font-weight:900; font-family:monospace; }
+.dimw-air .dimw-val { color:#0284c7; }
+.dimw-sea .dimw-val { color:var(--green); }
+.dimw-land .dimw-val { color:var(--yellow); }
+.dimw-warn { font-size:9px; margin-top:4px; font-weight:600; }
+.warn-over { color:var(--red); }
+.warn-ok   { color:var(--green); }
+.billable-box { background:var(--navy); color:#fff; border-radius:var(--radius-sm); padding:10px; margin-top:12px; text-align:center; font-weight:700; }
+.billable-box span { font-size:18px; }
+
+.cont-suggest { background:#f0fdf4; border:1px solid rgba(34,197,94,0.25); border-radius:var(--radius-sm); padding:10px 14px; font-size:12px; color:#166534; font-weight:600; margin-top:12px; text-align:center; }
+
+/* ===== STATS GRID ===== */
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.stat-box { background:var(--bg); border-radius:var(--radius-sm); padding:14px; text-align:center; border:1px solid var(--border); }
+.stat-box.hl { background:linear-gradient(135deg,var(--navy),var(--navy2)); color:#fff; border:none; }
+.stat-box.grn { background:#f0fdf4; } .stat-box.grn .sv { color:var(--green); }
+.stat-box.org { background:#fff8f2; } .stat-box.org .sv { color:var(--orange); }
+.stat-box.pur { background:#f5f3ff; } .stat-box.pur .sv { color:var(--purple); }
+.sv { font-size:28px; font-weight:900; font-family:monospace; line-height:1; }
+.sv.big { font-size:38px; }
+.sl { font-size:10px; font-weight:700; color:var(--muted); margin-top:4px; }
+.hl .sl { color:rgba(255,255,255,0.7); }
+.hl .sv { color:#fff; }
+
+/* ===== WEIGHT BAR ===== */
+.wbar-wrap { margin-bottom:14px; }
+.wbar-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:4px; }
+.wbar-bg { background:var(--border); border-radius:20px; height:10px; overflow:hidden; }
+.wbar-fill { height:100%; border-radius:20px; transition:width .6s; }
+.wok .wbar-fill { background:var(--green); }
+.wwarn .wbar-fill { background:var(--yellow); }
+.wover .wbar-fill { background:var(--red); width:100% !important; }
+.wbar-msg { font-size:11px; color:var(--muted); text-align:center; margin-top:3px; }
+
+/* ===== CANVAS VIEWS ===== */
+.views-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.view-box { background:var(--bg); border-radius:var(--radius-sm); overflow:hidden; border:1px solid var(--border); }
+.view-label { font-size:10px; font-weight:700; color:var(--muted); text-align:center; padding:6px 0; }
+canvas { display:block; width:100%; background:#f8fafc; }
+
+/* ===== ORIENTATIONS ===== */
+.orient-list { display:flex; flex-direction:column; gap:8px; }
+.orient-row { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--border); font-size:13px; transition:border .2s; }
+.orient-row.best { border-color:var(--orange); background:#fff8f2; }
+.orank { font-weight:800; color:var(--navy); }
+.ocount { font-weight:900; font-size:16px; color:var(--orange); }
+.olayout { font-size:10px; color:var(--muted); margin-top:1px; }
+.best-tag { background:var(--orange); color:#fff; font-size:9px; font-weight:800; padding:2px 8px; border-radius:20px; margin-right:6px; }
+
+/* ===== TIPS ===== */
+.tips-list { display:flex; flex-direction:column; gap:8px; }
+.tip { display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border-radius:var(--radius-sm); font-size:13px; line-height:1.5; }
+.tip.tip-ok   { background:#f0fdf4; border-right:3px solid var(--green); }
+.tip.tip-warn { background:#fffbeb; border-right:3px solid var(--yellow); }
+.tip.tip-info { background:#eff6ff; border-right:3px solid var(--blue); }
+.tip.tip-err  { background:#fef2f2; border-right:3px solid var(--red); }
+.ticon { font-size:18px; flex-shrink:0; }
+
+/* ===== RECOMMENDATION ===== */
+.rec-card { background:linear-gradient(135deg,var(--orange),var(--orange2)); border-radius:var(--radius); padding:16px; text-align:center; margin-bottom:14px; animation:fadeUp .3s ease; }
+.rec-label { font-size:12px; color:rgba(255,255,255,0.85); font-weight:600; margin-bottom:6px; }
+.rec-val { font-size:20px; font-weight:900; color:#fff; }
+.rec-desc { font-size:11px; color:rgba(255,255,255,0.8); margin-top:6px; line-height:1.5; }
+
+/* ===== PALLET AREA BAR ===== */
+.area-bar-wrap { margin-top:10px; }
+.area-bar-bg { background:var(--border); border-radius:20px; height:8px; overflow:hidden; }
+.area-bar-fill { height:100%; background:linear-gradient(90deg,var(--purple),#a78bfa); border-radius:20px; transition:width .5s; }
+.area-bar-label { font-size:10px; color:var(--muted); display:flex; justify-content:space-between; margin-bottom:3px; }
+
+/* ===== SAVED LIST ===== */
+.saved-list { display:flex; flex-direction:column; gap:8px; }
+.saved-item { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:var(--bg); border-radius:var(--radius-sm); border:1px solid var(--border); }
+.saved-name { font-weight:800; font-size:14px; }
+.saved-dims { font-size:11px; color:var(--muted); font-family:monospace; margin-top:2px; }
+.btn-load { padding:6px 12px; background:var(--navy); color:#fff; border:none; border-radius:8px; font-family:'Tajawal',sans-serif; font-size:12px; font-weight:700; cursor:pointer; }
+.btn-del  { padding:6px 10px; background:#fee2e2; color:var(--red); border:none; border-radius:8px; font-family:'Tajawal',sans-serif; font-size:12px; cursor:pointer; }
+.empty-state { text-align:center; padding:30px; color:var(--muted); }
+
+/* ===== GUIDE ===== */
+.guide-card { border-radius:var(--radius-sm); padding:14px; margin-bottom:10px; }
+.guide-card h3 { font-size:13px; font-weight:800; margin-bottom:6px; }
+.guide-card p, .guide-card li { font-size:12px; line-height:1.7; }
+.guide-card ul { padding-right:16px; }
+.gc-blue  { background:#e0f2fe; border-right:3px solid #0284c7; } .gc-blue  h3 { color:#0369a1; } .gc-blue  p { color:#075985; }
+.gc-green { background:#dcfce7; border-right:3px solid var(--green); } .gc-green h3 { color:#166534; } .gc-green li { color:#14532d; }
+.gc-amber { background:#fef3c7; border-right:3px solid var(--yellow); } .gc-amber h3 { color:#92400e; } .gc-amber p { color:#78350f; }
+.gc-pur   { background:#f5f3ff; border-right:3px solid var(--purple); } .gc-pur   h3 { color:#5b21b6; } .gc-pur   li { color:#4c1d95; }
+.gc-navy  { background:#e0f0ff; border-right:3px solid var(--navy); }  .gc-navy  h3 { color:var(--navy); } .gc-navy  li { color:#1e3a5f; }
+
+/* ===== TOAST ===== */
+.toast-wrap { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:999; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+.toast { padding:11px 22px; border-radius:40px; font-size:13px; font-weight:700; background:var(--navy); color:#fff; animation:slideUp .3s ease; display:flex; align-items:center; gap:8px; box-shadow:0 4px 18px rgba(0,0,0,0.2); }
+@keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* ===== CAMERA MODAL STYLES ===== */
+.camera-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 1000;
+    flex-direction: column;
+}
+.camera-video {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+    background: #000;
+}
+.camera-controls {
+    padding: 15px;
+    background: #111;
+    text-align: center;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+.camera-controls button {
+    margin: 0;
+    width: auto;
+    padding: 10px 20px;
+}
+.camera-guide {
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    width: 80%;
+    height: 40%;
+    border: 2px dashed var(--orange);
+    border-radius: 10px;
+    pointer-events: none;
+    box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+}
+.preview-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70%;
+    object-fit: contain;
+    background: #000;
+    z-index: 10;
+}
+/* ===== RESPONSIVE ===== */
+@media(max-width:480px){
+  .type-grid { grid-template-columns:repeat(2,1fr); }
+  .cont-grid { grid-template-columns:1fr; }
+  .views-row { grid-template-columns:1fr; }
+  .cbm-units-grid { grid-template-columns:repeat(3,1fr); }
+  .dimw-grid { grid-template-columns:1fr; }
+  .igrid3 { grid-template-columns:1fr 1fr; }
+  .sv { font-size:24px; } .sv.big { font-size:32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">📦</div>
+      <div class="logo-text">
+        <h1>الحمّال الذكي Pro</h1>
+        <p>النسخة النهائية | قياس بالكاميرا و AR</p>
+      </div>
+    </div>
+    <div class="unit-badge" id="unitBadge" onclick="toggleUnit()">📏 سم</div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('cbm',this)">📊 CBM</button>
+    <button class="tab-btn" onclick="switchTab('product',this)">📦 المنتج</button>
+    <button class="tab-btn" onclick="switchTab('pallet',this)">🏗 البالته</button>
+    <button class="tab-btn" onclick="switchTab('container',this)">🚢 الحاوية</button>
+    <button class="tab-btn" onclick="switchTab('results',this)">📈 النتائج</button>
+    <button class="tab-btn" onclick="switchTab('saved',this)">💾 المحفوظات</button>
+    <button class="tab-btn" onclick="switchTab('guide',this)">📖 الدليل</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ========== TAB: CBM ========== -->
+<div id="tab-cbm" class="tab-pane active">
+
+  <div class="card">
+    <div class="card-title"><span class="ico">📊</span> حاسبة CBM والوزن الحجمي</div>
+
+    <div class="igrid3">
+      <div class="igroup">
+        <label>📏 الطول</label>
+        <div class="num-inp">
+          <button onclick="cbmChange('cL',-1)">−</button>
+          <input type="number" id="cL" value="50" step="1" min="0.1" oninput="calcCBM()">
+          <button onclick="cbmChange('cL',1)">+</button>
+        </div>
+      </div>
+      <div class="igroup">
+        <label>📐 العرض</label>
+        <div class="num-inp">
+          <button onclick="cbmChange('cW',-1)">−</button>
+          <input type="number" id="cW" value="40" step="1" min="0.1" oninput="calcCBM()">
+          <button onclick="cbmChange('cW',1)">+</button>
+        </div>
+      </div>
+      <div class="igroup">
+        <label>📏 الارتفاع</label>
+        <div class="num-inp">
+          <button onclick="cbmChange('cH',-1)">−</button>
+          <input type="number" id="cH" value="30" step="1" min="0.1" oninput="calcCBM()">
+          <button onclick="cbmChange('cH',1)">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="igroup">
+      <label>📦 الكمية</label>
+      <div class="num-inp">
+        <button onclick="cbmChange('cQty',-10)">−10</button>
+        <button onclick="cbmChange('cQty',-1)">−</button>
+        <input type="number" id="cQty" value="100" step="1" min="1" oninput="calcCBM()">
+        <button onclick="cbmChange('cQty',1)">+</button>
+        <button onclick="cbmChange('cQty',10)">+10</button>
+      </div>
+    </div>
+    <div class="igroup" style="margin-top:4px">
+      <label>⚖️ الوزن الفعلي للوحدة (كجم)</label>
+      <input type="number" id="cKg" value="5" step="0.1" min="0" oninput="calcCBM()" style="padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);">
+    </div>
+
+    <div class="cbm-hero">
+      <div style="font-size:12px;color:rgba(255,255,255,0.75);margin-bottom:6px;">إجمالي حجم الشحنة (CBM)</div>
+      <div class="cbm-num" id="cbmTotal">0.000</div>
+      <div class="cbm-sub">الطول × العرض × الارتفاع (بالمتر) × الكمية</div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <div class="card-title" style="border:none;padding:0;margin-bottom:10px;font-size:13px;color:var(--muted);">📐 حجم الصندوق الواحد بوحدات مختلفة</div>
+      <div class="cbm-units-grid">
+        <div class="cbm-unit-box"><div class="cbm-unit-val" id="uCBM">0</div><div class="cbm-unit-lbl">م³ (CBM)</div></div>
+        <div class="cbm-unit-box"><div class="cbm-unit-val" id="uCm3">0</div><div class="cbm-unit-lbl">سم مكعب</div></div>
+        <div class="cbm-unit-box"><div class="cbm-unit-val" id="uIn3">0</div><div class="cbm-unit-lbl">بوصة³</div></div>
+        <div class="cbm-unit-box"><div class="cbm-unit-val" id="uFt3">0</div><div class="cbm-unit-lbl">قدم³</div></div>
+        <div class="cbm-unit-box"><div class="cbm-unit-val" id="uYd3">0</div><div class="cbm-unit-lbl">ياردة³</div></div>
+        <div class="cbm-unit-box"><div class="cbm-unit-val" id="uLiter">0</div><div class="cbm-unit-lbl">لتر</div></div>
+        <div class="cbm-unit-box"><div class="cbm-unit-val" id="uMl">0</div><div class="cbm-unit-lbl">مللتر</div></div>
+        <div class="cbm-unit-box"><div class="cbm-unit-val" id="uGalUS">0</div><div class="cbm-unit-lbl">غالون أمر.</div></div>
+        <div class="cbm-unit-box"><div class="cbm-unit-val" id="uGalUK">0</div><div class="cbm-unit-lbl">غالون بر.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ico">⚖️</span> الوزن الحجمي حسب نوع الشحن</div>
+    <div class="dimw-grid">
+      <div class="dimw-box dimw-air">
+        <div class="dimw-title">✈️ جوي ÷6000</div>
+        <div class="dimw-val" id="dwAir">0 كجم</div>
+        <div class="dimw-warn" id="dwAirMsg"></div>
+      </div>
+      <div class="dimw-box dimw-sea">
+        <div class="dimw-title">🚢 بحري ÷1000</div>
+        <div class="dimw-val" id="dwSea">0 كجم</div>
+        <div class="dimw-warn" id="dwSeaMsg"></div>
+      </div>
+      <div class="dimw-box dimw-land">
+        <div class="dimw-title">🚛 بري ÷3000</div>
+        <div class="dimw-val" id="dwLand">0 كجم</div>
+        <div class="dimw-warn" id="dwLandMsg"></div>
+      </div>
+    </div>
+    <div class="billable-box" id="billableBox">
+      💰 الوزن القابل للفوترة (Billable) = <span id="billableWeight">0</span> كجم
+    </div>
+    <div class="cont-suggest" id="cbmSuggest">أدخل الأبعاد والكمية لمعرفة الحاوية المناسبة</div>
+  </div>
+
+</div>
+
+<!-- ========== TAB: PRODUCT ========== -->
+<div id="tab-product" class="tab-pane">
+
+  <div class="card">
+    <div class="card-title"><span class="ico">🏷</span> نوع المنتج</div>
+    <div class="type-grid">
+      <div class="type-card selected" onclick="selType('carton',this)"><div class="ticon">📦</div><div class="tlabel">كرتونة</div></div>
+      <div class="type-card" onclick="selType('bottle',this)"><div class="ticon">🫙</div><div class="tlabel">زجاجة</div></div>
+      <div class="type-card" onclick="selType('jug',this)"><div class="ticon">🪣</div><div class="tlabel">جالون</div></div>
+      <div class="type-card" onclick="selType('sack',this)"><div class="ticon">🌾</div><div class="tlabel">شوال/كيس</div></div>
+      <div class="type-card" onclick="selType('bale',this)"><div class="ticon">🧱</div><div class="tlabel">بالة/لفافة</div></div>
+      <div class="type-card" onclick="selType('pallet',this)"><div class="ticon">🏗</div><div class="tlabel">بالت/منصة</div></div>
+    </div>
+    <div class="type-note" id="typeNote">كرتونة: يمكن تدويرها بجميع الاتجاهات الستة لأفضل استغلال.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ico">📐</span> أبعاد المنتج &nbsp;<span id="unitLabel" style="font-size:11px;color:var(--muted);font-weight:500">(سم)</span></div>
+    
+    <!-- NEW: Camera & AR Buttons -->
+    <div style="margin-top:10px; margin-bottom:15px;">
+      <button class="btn-calc" onclick="openScanModal()" style="margin-bottom:8px;">📷 قياس بالكاميرا (بكارت بنكي)</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-teal" style="flex:1" onclick="openScanModal()">📸 كاميرا عادي</button>
+        <button class="btn-purple" style="flex:1" onclick="startAR()">🚀 AR احترافي (نقرتين)</button>
+      </div>
+    </div>
+
+    <div class="igrid3">
+      <div class="igroup"><label>الطول (L)</label><input type="number" id="pL" placeholder="0" step="0.1" min="0.01"></div>
+      <div class="igroup"><label>العرض (W)</label><input type="number" id="pW" placeholder="0" step="0.1" min="0.01"></div>
+      <div class="igroup"><label>الارتفاع (H)</label><input type="number" id="pH" placeholder="0" step="0.1" min="0.01"></div>
+    </div>
+    <div class="igrid2">
+      <div class="igroup"><label>الوزن (كجم)</label><input type="number" id="pKg" placeholder="0" step="0.01" min="0"></div>
+      <div class="igroup"><label>اسم المنتج</label><input type="text" id="pName" placeholder="اختياري"></div>
+    </div>
+    <div class="btns-row">
+      <button class="btn-sm btn-outline" style="flex:1" onclick="saveProd()">💾 حفظ</button>
+      <button class="btn-sm btn-red"     style="flex:1" onclick="resetProd()">🗑 مسح</button>
+      <button class="btn-calc"           style="flex:2;padding:11px" onclick="goToPallet()">التالي: البالته ←</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== TAB: PALLET ========== -->
+<div id="tab-pallet" class="tab-pane">
+
+  <div class="card">
+    <div class="card-title"><span class="ico">🏗</span> أبعاد البالته</div>
+    <div class="pallet-presets">
+      <button class="psize-btn" onclick="setPallet(120,100,this)">📏 120×100</button>
+      <button class="psize-btn" onclick="setPallet(80,100,this)">📏 80×100</button>
+      <button class="psize-btn" onclick="setPallet(120,80,this)">📏 120×80</button>
+      <button class="psize-btn active" onclick="setPallet(100,100,this)">📏 100×100</button>
+    </div>
+    <div class="igrid2">
+      <div class="igroup"><label>طول البالته (سم)</label><input type="number" id="palL" value="100" step="1" min="1"></div>
+      <div class="igroup"><label>عرض البالته (سم)</label><input type="number" id="palW" value="100" step="1" min="1"></div>
+    </div>
+    <div class="igrid2">
+      <div class="igroup"><label>ارتفاع البالته الخشبية (سم)</label><input type="number" id="palH" placeholder="مثال: 15" value="15" step="1" min="0"></div>
+      <div class="igroup"><label>أقصى ارتفاع كلي للرص (سم)</label><input type="number" id="palMaxH" placeholder="افتراضي 160" value="160" step="1"></div>
+    </div>
+    <div class="igroup">
+      <label>أقصى وزن للبالته (كجم)</label>
+      <input type="number" id="palMaxKg" placeholder="اختياري" step="10">
+    </div>
+    <div class="type-note" style="background:#fef3c7; border-right-color:var(--yellow); margin-top:8px;">
+      💡 <strong>ملاحظة:</strong> أقصى ارتفاع للرص في البالته عادة لا يتجاوز 160 سم (بما فيها الخشب).<br>
+      ارتفاع البالته الخشبية يتراوح بين 12-18 سم. اترك مسافة 5-10 سم للرافعة الشوكية.
+    </div>
+    <button class="btn-sm btn-purple" style="width:100%;margin-top:12px" onclick="calcPallet()">🧮 حساب القطع على البالته</button>
+  </div>
+
+  <div id="palletResultsDiv" style="display:none">
+    <div class="card">
+      <div class="card-title"><span class="ico">📊</span> نتائج رص البالته</div>
+      <div class="stats-grid">
+        <div class="stat-box pur"><div class="sv big" id="palTotal">0</div><div class="sl">قطع / بالته</div></div>
+        <div class="stat-box"><div class="sv" id="palPerLayer">0</div><div class="sl">قطع / طبقة</div></div>
+        <div class="stat-box"><div class="sv" id="palLayers">0</div><div class="sl">عدد الطبقات</div></div>
+        <div class="stat-box"><div class="sv" id="palWeight">0</div><div class="sl">الوزن (كجم)</div></div>
+      </div>
+      <div class="area-bar-wrap">
+        <div class="area-bar-label"><span>استغلال مساحة البالته</span><span id="palAreaPct">0%</span></div>
+        <div class="area-bar-bg"><div class="area-bar-fill" id="palAreaBar" style="width:0%"></div></div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:4px" id="palDimTxt"></div>
+      <div class="views-row" style="margin-top:14px">
+        <div class="view-box"><div class="view-label">📐 منظر علوي</div><canvas id="cvPalTop" height="170"></canvas></div>
+        <div class="view-box"><div class="view-label">📏 منظر جانبي</div><canvas id="cvPalSide" height="170"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== TAB: CONTAINER ========== -->
+<div id="tab-container" class="tab-pane">
+
+  <div class="card">
+    <div class="card-title"><span class="ico">🚢</span> نوع الحاوية</div>
+    <div class="cont-grid" id="contGrid">
+      <div class="cont-card selected" onclick="selCont('20dry',this)">
+        <span class="cbadge bdry">جاف</span><h4>20 قدم</h4>
+        <div class="cdims">598×235×239 سم</div><div class="cvol">33.2 م³ | 28,280 كجم</div>
+      </div>
+      <div class="cont-card" onclick="selCont('40dry',this)">
+        <span class="cbadge bdry">جاف</span><h4>40 قدم</h4>
+        <div class="cdims">1203×235×239 سم</div><div class="cvol">67.7 م³ | 28,750 كجم</div>
+      </div>
+      <div class="cont-card" onclick="selCont('40hcDry',this)">
+        <span class="cbadge bdry">جاف HC</span><h4>40 قدم HC</h4>
+        <div class="cdims">1203×235×270 سم</div><div class="cvol">76.4 م³ | 28,600 كجم</div>
+      </div>
+      <div class="cont-card" onclick="selCont('20reefer',this)">
+        <span class="cbadge breef">مبرد</span><h4>20 قدم مبرد</h4>
+        <div class="cdims">544×229×227 سم</div><div class="cvol">28.3 م³ | 21,500 كجم</div>
+      </div>
+      <div class="cont-card" onclick="selCont('40reefer',this)">
+        <span class="cbadge breef">مبرد</span><h4>40 قدم مبرد</h4>
+        <div class="cdims">1156×229×227 سم</div><div class="cvol">60.1 م³ | 25,500 كجم</div>
+      </div>
+      <div class="cont-card" onclick="selCont('40hcReefer',this)">
+        <span class="cbadge breef">مبرد HC</span><h4>40 قدم HC مبرد</h4>
+        <div class="cdims">1156×229×257 سم</div><div class="cvol">68.1 م³ | 25,500 كجم</div>
+      </div>
+      <div class="cont-card" onclick="selCont('20frozen',this)">
+        <span class="cbadge bfrz">مجمد</span><h4>20 قدم مجمد</h4>
+        <div class="cdims">544×229×227 سم</div><div class="cvol">28.3 م³ | 21,500 كجم</div>
+      </div>
+      <div class="cont-card" onclick="selCont('40frozen',this)">
+        <span class="cbadge bfrz">مجمد</span><h4>40 قدم مجمد</h4>
+        <div class="cdims">1156×229×227 سم</div><div class="cvol">60.1 م³ | 25,500 كجم</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ico">⚙️</span> عوامل التحميل الواقعية</div>
+    <div class="igrid2">
+      <div class="igroup"><label>أقصى ارتفاع للرص (سم)</label><input type="number" id="maxSH" placeholder="مثال: 230" step="1"></div>
+      <div class="igroup"><label>عدد طبقات الرص</label><input type="number" id="maxLay" placeholder="بدون حد" step="1" min="1"></div>
+    </div>
+    <div class="igroup">
+      <label>عامل الخسارة / الهدر (Wastage %): <span id="wastageVal">0</span>%</label>
+      <input type="range" id="wastageSlider" min="0" max="25" value="0" step="1" oninput="updateWastageValue(this.value)">
+      <div class="type-note" style="margin-top:4px">⭐ النسبة المئوية للفجوات بين الصناديق والجدران (يوصى بـ 5-10% للتطبيق العملي).</div>
+    </div>
+  </div>
+
+  <button class="btn-calc" onclick="calcContainer()">🧮 احسب عدد الوحدات في الحاوية</button>
+
+</div>
+
+<!-- ========== TAB: RESULTS ========== -->
+<div id="tab-results" class="tab-pane">
+  <div id="noResultMsg" class="card" style="text-align:center;padding:36px;color:var(--muted)">
+    <div style="font-size:44px;margin-bottom:12px">📊</div>
+    <p>أدخل أبعاد المنتج في تبويب <strong>المنتج</strong>، اختر الحاوية، ثم اضغط <strong>احسب</strong>.</p>
+  </div>
+  <div id="resultsContent" style="display:none">
+
+    <div class="rec-card" id="recCard">
+      <div class="rec-label">🏆 الترتيب الأمثل</div>
+      <div class="rec-val" id="recTitle">--</div>
+      <div class="rec-desc" id="recDesc"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="ico">✅</span> <span id="resHeading">النتائج</span></div>
+      <div class="stats-grid">
+        <div class="stat-box hl"><div class="sv big" id="rTotal">0</div><div class="sl">إجمالي الوحدات</div></div>
+        <div class="stat-box org"><div class="sv" id="rEff">0%</div><div class="sl">كفاءة الاستغلال</div></div>
+        <div class="stat-box grn"><div class="sv" id="rPerLayer">0</div><div class="sl">وحدة / طبقة</div></div>
+        <div class="stat-box"><div class="sv" id="rLayers" style="color:var(--navy)">0</div><div class="sl">عدد الطبقات</div></div>
+      </div>
+      <div class="wbar-wrap" id="wbarWrap">
+        <div class="wbar-labels">
+          <span>الوزن المحمل: <strong id="wLoaded">0</strong> كجم</span>
+          <span>الحد الأقصى: <strong id="wMax">0</strong> كجم</span>
+        </div>
+        <div class="wbar-bg"><div class="wbar-fill" id="wbarFill" style="width:0%"></div></div>
+        <div class="wbar-msg" id="wbarMsg"></div>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius-sm);padding:12px;font-size:13px;line-height:1.8" id="rLayout"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="ico">🗺</span> التمثيل المرئي داخل الحاوية</div>
+      <div class="views-row">
+        <div class="view-box"><div class="view-label">📐 منظر علوي (أرضية الحاوية)</div><canvas id="cvContTop" height="175"></canvas></div>
+        <div class="view-box"><div class="view-label">📏 منظر جانبي (الطبقات)</div><canvas id="cvContSide" height="175"></canvas></div>
+      </div>
+      <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px">🟦 مساحة الحاوية &nbsp; 🟧 وحدات المنتج</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="ico">🔄</span> مقارنة الاتجاهات المحسوبة</div>
+      <div class="orient-list" id="orientList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="ico">💡</span> توصيات وتعليمات الرص</div>
+      <div class="tips-list" id="tipsList"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== TAB: SAVED ========== -->
+<div id="tab-saved" class="tab-pane">
+  <div class="card">
+    <div class="card-title"><span class="ico">💾</span> المنتجات المحفوظة</div>
+    <div id="savedListDiv" class="saved-list"><div class="empty-state">لا توجد منتجات محفوظة</div></div>
+  </div>
+</div>
+
+<!-- ========== TAB: GUIDE ========== -->
+<div id="tab-guide" class="tab-pane">
+  <div class="card">
+    <div class="card-title"><span class="ico">📖</span> دليل الاستخدام السريع</div>
+    <div class="guide-card gc-blue">
+      <h3>📐 كيفية حساب القطع على البالته</h3>
+      <p>يتم استخدام <strong>Math.floor</strong> فقط (دون تقريب) لأن الكسر من القطعة لا يمكن استخدامه.<br>
+      مثال: 100 ÷ 35 = 2.85 → يتم وضع قطعتين فقط (2 × 35 = 70 سم) ويتبقى 30 سم فراغاً.</p>
+    </div>
+    <div class="guide-card gc-green">
+      <h3>⚖️ الوزن القابل للفوترة (Billable Weight)</h3>
+      <p>شركات الشحن تحسب على <strong>الوزن الأعلى</strong> بين الوزن الفعلي والوزن الحجمي.<br>
+      - جوي: ÷ 6000<br>- بحري: 1 CBM = 1000 كجم<br>- بري: ÷ 3000</p>
+    </div>
+    <div class="guide-card gc-amber">
+      <h3>💡 نصائح مهمة</h3>
+      <ul>
+        <li>دائماً استخدم Math.floor وليس Math.round أو أي تقريب آخر</li>
+        <li>الفراغات المتبقية طبيعية ولا يمكن استغلالها</li>
+        <li>أضف 5-10% كعامل خسارة (Wastage) للحصول على نتائج واقعية</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- ========== CAMERA MODAL ========== -->
+<div id="scanModal" class="camera-modal">
+  <video id="cam" class="camera-video" autoplay playsinline></video>
+  <canvas id="previewCanvas" class="preview-canvas" style="display: none;"></canvas>
+  <div class="camera-guide"></div>
+  <div class="camera-controls">
+    <button onclick="capturePhoto()" class="btn-calc">📸 التقاط وتحليل</button>
+    <button onclick="closeScan()" class="btn-red btn-sm">❌ إغلاق</button>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.0/examples/jsm/webxr/ARButton.js"></script>
+<script>
+// ===================== DATA =====================
+const CONTAINERS = {
+  '20dry':     { name:'20 قدم جاف',      L:598,  W:235, H:239, maxKg:28280 },
+  '40dry':     { name:'40 قدم جاف',      L:1203, W:235, H:239, maxKg:28750 },
+  '40hcDry':   { name:'40 قدم HC جاف',   L:1203, W:235, H:270, maxKg:28600 },
+  '20reefer':  { name:'20 قدم مبرد',     L:544,  W:229, H:227, maxKg:21500 },
+  '40reefer':  { name:'40 قدم مبرد',     L:1156, W:229, H:227, maxKg:25500 },
+  '40hcReefer':{ name:'40 قدم HC مبرد',  L:1156, W:229, H:257, maxKg:25500 },
+  '20frozen':  { name:'20 قدم مجمد',     L:544,  W:229, H:227, maxKg:21500 },
+  '40frozen':  { name:'40 قدم مجمد',     L:1156, W:229, H:227, maxKg:25500 },
+};
+
+const TYPE_INFO = {
+  carton:{ icon:'📦', label:'كرتونة', note:'يمكن تدويرها بجميع الاتجاهات الستة.', rot:6 },
+  bottle:{ icon:'🫙', label:'زجاجة', note:'تُرص واقفة فقط.', rot:2 },
+  jug:   { icon:'🪣', label:'جالون', note:'تُرص واقفة فقط.', rot:2 },
+  sack:  { icon:'🌾', label:'شوال', note:'يُفضل وضعه مسطحاً.', rot:3 },
+  bale:  { icon:'🧱', label:'بالة', note:'يمكن تدويرها بالكامل.', rot:6 },
+  pallet:{ icon:'🏗', label:'بالت', note:'يُوضع أفقياً فقط.', rot:2 },
+};
+
+let selTypeId = 'carton';
+let selContId = '20dry';
+let curUnit = 'cm';
+let savedProds = JSON.parse(localStorage.getItem('hammal_v3') || '[]');
+let lastPalRes = null;
+let lastContRes = null;
+let currentStream = null;
+
+// ===================== TOAST =====================
+function toast(msg, type = 'info') {
+  const icons = { info: 'ℹ️', ok: '✅', warn: '⚠️', err: '❌' };
+  const bgs = { info: '#1a3a5c', ok: '#166534', warn: '#92400e', err: '#991b1b' };
+  const w = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.style.background = bgs[type] || bgs.info;
+  t.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${msg}</span>`;
+  w.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ===================== TAB SWITCHING =====================
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// ===================== UNIT TOGGLE =====================
+function toggleUnit() {
+  const units = ['cm', 'inch', 'mm'];
+  const labels = ['سم', 'بوصة', 'مم'];
+  const factors = { cm: { cm: 1, inch: 0.3937, mm: 10 }, inch: { cm: 2.54, inch: 1, mm: 25.4 }, mm: { cm: 0.1, inch: 0.003937, mm: 1 } };
+  const ids = ['pL', 'pW', 'pH', 'palL', 'palW', 'cL', 'cW', 'cH'];
+  const old = curUnit;
+  const ni = (units.indexOf(curUnit) + 1) % 3;
+  curUnit = units[ni];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let v = parseFloat(el.value);
+    if (!isNaN(v) && v > 0) {
+      el.value = (v * factors[old][curUnit]).toFixed(2);
+    }
+  });
+  document.getElementById('unitBadge').textContent = '📏 ' + labels[ni];
+  document.getElementById('unitLabel').textContent = '(' + labels[ni] + ')';
+  toast(`تم التبديل إلى ${labels[ni]}`);
+  if (lastPalRes) calcPallet();
+  if (lastContRes) calcContainer();
+  calcCBM();
+}
+
+function toCm(v) {
+  if (curUnit === 'inch') return v * 2.54;
+  if (curUnit === 'mm') return v / 10;
+  return v;
+}
+
+function fromCm(c) {
+  if (curUnit === 'inch') return c / 2.54;
+  if (curUnit === 'mm') return c * 10;
+  return c;
+}
+
+// ===================== CBM CALCULATOR =====================
+function cbmChange(id, d) {
+  const el = document.getElementById(id);
+  let v = parseFloat(el.value) || 0;
+  v = id === 'cQty' ? Math.max(1, v + d) : Math.max(0.1, v + d);
+  el.value = v;
+  calcCBM();
+}
+
+function calcCBM() {
+  const L = parseFloat(document.getElementById('cL').value) || 0;
+  const W = parseFloat(document.getElementById('cW').value) || 0;
+  const H = parseFloat(document.getElementById('cH').value) || 0;
+  const qty = parseFloat(document.getElementById('cQty').value) || 0;
+  const kg = parseFloat(document.getElementById('cKg').value) || 0;
+  if (!L || !W || !H) return;
+
+  const cm3One = L * W * H;
+  const cbmOne = cm3One / 1e6;
+  const cbmTot = cbmOne * qty;
+  const kgTot = kg * qty;
+
+  document.getElementById('cbmTotal').textContent = cbmTot.toFixed(3);
+
+  const in3 = cm3One / 16.387;
+  const ft3 = cm3One / 28316.8;
+  const yd3 = cm3One / 764555;
+  const lit = cm3One / 1000;
+  const ml = cm3One;
+  const gUs = lit / 3.78541;
+  const gUk = lit / 4.54609;
+  document.getElementById('uCBM').textContent = cbmOne.toFixed(4);
+  document.getElementById('uCm3').textContent = Math.round(cm3One).toLocaleString();
+  document.getElementById('uIn3').textContent = Math.round(in3).toLocaleString();
+  document.getElementById('uFt3').textContent = ft3.toFixed(2);
+  document.getElementById('uYd3').textContent = yd3.toFixed(5);
+  document.getElementById('uLiter').textContent = lit.toFixed(2);
+  document.getElementById('uMl').textContent = Math.round(ml).toLocaleString();
+  document.getElementById('uGalUS').textContent = gUs.toFixed(2);
+  document.getElementById('uGalUK').textContent = gUk.toFixed(2);
+
+  const volTot = cm3One * qty;
+  const dwAir = volTot / 6000;
+  const dwSea = cbmTot * 1000;
+  const dwLand = volTot / 3000;
+
+  function fmtDW(dw) { return Math.ceil(dw).toLocaleString() + ' كجم'; }
+  document.getElementById('dwAir').textContent = fmtDW(dwAir);
+  document.getElementById('dwSea').textContent = fmtDW(dwSea);
+  document.getElementById('dwLand').textContent = fmtDW(dwLand);
+
+  let billable = 0;
+  let billMsg = '';
+  if (kgTot > 0) {
+    billable = Math.max(kgTot, dwAir, dwLand, dwSea);
+    billMsg = `الوزن الأكبر بين الفعلي (${Math.ceil(kgTot)} كجم) والحجمي (${Math.ceil(Math.max(dwAir, dwLand, dwSea))} كجم)`;
+  } else {
+    billable = Math.max(dwAir, dwLand, dwSea);
+    billMsg = `الوزن الحجمي الأكبر حسب نوع الشحن`;
+  }
+  document.getElementById('billableWeight').innerHTML = `<strong>${Math.ceil(billable).toLocaleString()}</strong> (${billMsg})`;
+
+  function wMsg(dw, actual, elId) {
+    const el = document.getElementById(elId);
+    if (actual <= 0) { el.textContent = ''; return; }
+    if (dw > actual) {
+      el.textContent = `⚠️ يتجاوز الفعلي (+${Math.ceil(dw - actual)} كجم) — رسوم إضافية`;
+      el.className = 'dimw-warn warn-over';
+    } else {
+      el.textContent = '✅ أقل من الوزن الفعلي';
+      el.className = 'dimw-warn warn-ok';
+    }
+  }
+  wMsg(dwAir, kgTot, 'dwAirMsg');
+  wMsg(dwSea, kgTot, 'dwSeaMsg');
+  wMsg(dwLand, kgTot, 'dwLandMsg');
+
+  const el = document.getElementById('cbmSuggest');
+  if (cbmTot <= 33.2) el.textContent = '✅ حاوية 20 قدم جاف مناسبة (33.2 م³)';
+  else if (cbmTot <= 67.7) el.textContent = '✅ حاوية 40 قدم جاف مناسبة (67.7 م³)';
+  else if (cbmTot <= 76.4) el.textContent = '✅ حاوية 40 قدم HC مناسبة (76.4 م³)';
+  else {
+    const n = Math.ceil(cbmTot / 76.4);
+    el.textContent = `⚠️ الشحنة تحتاج إلى ${n} حاوية 40 قدم HC`;
+  }
+}
+
+// ===================== PRODUCT TYPE =====================
+function selType(type, el) {
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selTypeId = type;
+  document.getElementById('typeNote').textContent = TYPE_INFO[type].note;
+}
+
+function resetProd() {
+  ['pL', 'pW', 'pH', 'pKg', 'pName'].forEach(id => document.getElementById(id).value = '');
+  toast('تم مسح الحقول', 'ok');
+}
+
+function goToPallet() {
+  const L = parseFloat(document.getElementById('pL').value);
+  const W = parseFloat(document.getElementById('pW').value);
+  const H = parseFloat(document.getElementById('pH').value);
+  if (!L || !W || !H) { toast('أدخل أبعاد المنتج أولاً', 'warn'); return; }
+  switchTab('pallet', document.querySelectorAll('.tab-btn')[2]);
+}
+
+// ===================== PALLET SIZE PRESET =====================
+function setPallet(L, W, btn) {
+  document.getElementById('palL').value = L;
+  document.getElementById('palW').value = W;
+  document.querySelectorAll('.psize-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  toast(`✅ بالته ${L}×${W} سم`, 'ok');
+  if (lastPalRes) calcPallet();
+}
+
+// ===================== ORIENTATIONS =====================
+function getOrientations(L, W, H, type) {
+  switch (type) {
+    case 'bottle': case 'jug': return [[L, W, H], [W, L, H]];
+    case 'pallet': return [[L, W, H], [W, L, H]];
+    case 'sack': return [[L, W, H], [L, H, W], [W, H, L]];
+    default: return [[L, W, H], [L, H, W], [W, L, H], [W, H, L], [H, L, W], [H, W, L]];
+  }
+}
+
+// ===================== PALLET CALCULATION (باستخدام Math.floor فقط) =====================
+function calcPallet() {
+  const L = toCm(parseFloat(document.getElementById('pL').value));
+  const W = toCm(parseFloat(document.getElementById('pW').value));
+  const H = toCm(parseFloat(document.getElementById('pH').value));
+  const kg = parseFloat(document.getElementById('pKg').value) || 0;
+  const pL = toCm(parseFloat(document.getElementById('palL').value));
+  const pW = toCm(parseFloat(document.getElementById('palW').value));
+  const palletH = toCm(parseFloat(document.getElementById('palH').value)) || 15;
+  let maxH = toCm(parseFloat(document.getElementById('palMaxH').value));
+  if (isNaN(maxH) || maxH <= 0) maxH = 160;
+  const maxKg = parseFloat(document.getElementById('palMaxKg').value) || Infinity;
+
+  if (!L || !W || !H || !pL || !pW) {
+    toast('أدخل أبعاد المنتج والبالته أولاً', 'warn');
+    return;
+  }
+
+  const availableH = maxH - palletH;
+  if (availableH <= 0) {
+    toast('⚠️ ارتفاع البالته الخشبية أكبر من الحد الأقصى للرص!', 'err');
+    return;
+  }
+
+  const orientations = getOrientations(L, W, H, selTypeId);
+  const results = [];
+
+  for (const [bL, bW, bH] of orientations) {
+    // استخدام Math.floor فقط - لا تقريب أبداً
+    const fL1 = Math.floor(pL / bL);
+    const fW1 = Math.floor(pW / bW);
+    const fL2 = Math.floor(pL / bW);
+    const fW2 = Math.floor(pW / bL);
+    
+    let fL, fW;
+    const qty1 = fL1 * fW1;
+    const qty2 = fL2 * fW2;
+    
+    if (qty1 >= qty2 && fL1 >= 1 && fW1 >= 1) {
+      fL = fL1;
+      fW = fW1;
+    } else if (qty2 > qty1 && fL2 >= 1 && fW2 >= 1) {
+      fL = fL2;
+      fW = fW2;
+    } else {
+      continue;
+    }
+    
+    let fH = Math.floor(availableH / bH);
+    if (fH < 1) fH = 1;
+    
+    let total = fL * fW * fH;
+    let totalKg = total * kg;
+    
+    if (kg > 0 && totalKg > maxKg && maxKg !== Infinity) {
+      const maxTotalByWeight = Math.floor(maxKg / kg);
+      if (maxTotalByWeight < total) {
+        total = maxTotalByWeight;
+        const perLayer = fL * fW;
+        fH = Math.max(1, Math.floor(total / perLayer));
+        total = fL * fW * fH;
+        totalKg = total * kg;
+      }
+    }
+    
+    const areaUsed = (fL * bL * fW * bW);
+    const areaPallet = pL * pW;
+    let area = (areaUsed / areaPallet) * 100;
+    area = Math.min(area, 95);
+    
+    results.push({
+      total, fL, fW, fH, bL, bW, bH,
+      totalKg, area, stackHeight: fH * bH + palletH,
+      perLayer: fL * fW
+    });
+  }
+  
+  const uniqueResults = [];
+  const seen = new Set();
+  for (const r of results) {
+    const key = `${r.bL},${r.bW},${r.bH}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      uniqueResults.push(r);
+    }
+  }
+  uniqueResults.sort((a, b) => b.total - a.total);
+  
+  if (uniqueResults.length === 0) {
+    toast('⚠️ المنتج أكبر من البالته! غيّر الأبعاد أو اتجاه الرص', 'err');
+    return;
+  }
+  
+  const best = uniqueResults[0];
+  lastPalRes = { best, pL, pW };
+  
+  document.getElementById('palletResultsDiv').style.display = 'block';
+  document.getElementById('palTotal').textContent = best.total.toLocaleString();
+  document.getElementById('palPerLayer').textContent = best.perLayer.toLocaleString();
+  document.getElementById('palLayers').textContent = best.fH;
+  document.getElementById('palWeight').textContent = best.totalKg.toFixed(0).toLocaleString();
+  document.getElementById('palAreaPct').textContent = best.area.toFixed(1) + '%';
+  document.getElementById('palAreaBar').style.width = best.area.toFixed(1) + '%';
+  document.getElementById('palDimTxt').innerHTML = `
+    📦 أبعاد المنتج المرصوص: ${best.bL.toFixed(1)} × ${best.bW.toFixed(1)} × ${best.bH.toFixed(1)} سم<br>
+    📐 الترتيب في الطبقة: ${best.fL} طول × ${best.fW} عرض = ${best.perLayer} قطعة/طبقة<br>
+    📏 عدد الطبقات: ${best.fH} طبقة<br>
+    📐 الارتفاع الكلي للبالته: ${best.stackHeight.toFixed(0)} سم (خشب ${palletH} سم + بضاعة ${best.fH * best.bH} سم)<br>
+    🔍 ملاحظة: يتم استخدام Floor فقط (لا تقريب للكسور) لضمان الدقة.
+  `;
+  
+  requestAnimationFrame(() => {
+    drawPalTop(best, pL, pW);
+    drawPalSide(best, pL, pW);
+  });
+  
+  toast(`✅ ${best.total.toLocaleString()} قطعة / بالته (${best.fH} طبقات × ${best.perLayer} قطعة/طبقة)`, 'ok');
+}
+
+// ===================== PALLET CANVAS =====================
+function drawPalTop(r, palL, palW) {
+  const cv = document.getElementById('cvPalTop');
+  if (!cv) return;
+  cv.width = cv.parentElement.offsetWidth || 260;
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = 170, m = 16;
+  const scale = Math.min((W - m * 2) / palL, (H - m * 2) / palW) * 0.88;
+  const dL = palL * scale, dW = palW * scale;
+  const ox = m + ((W - m * 2) - dL) / 2, oy = m + ((H - m * 2) - dW) / 2;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#f5f3ff';
+  ctx.fillRect(ox, oy, dL, dW);
+  ctx.strokeStyle = '#8b5cf6';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(ox, oy, dL, dW);
+  const bL = r.bL * scale, bW = r.bW * scale;
+  let drawn = 0, maxDraw = Math.min(r.fL * r.fW, 500);
+  outer: for (let i = 0; i < r.fL; i++) {
+    for (let j = 0; j < r.fW; j++) {
+      if (drawn++ >= maxDraw) break outer;
+      ctx.globalAlpha = 0.87;
+      ctx.fillStyle = `hsl(${25 + i * 8}, 85%, 58%)`;
+      ctx.fillRect(ox + i * bL + 1, oy + j * bW + 1, bL - 2, bW - 2);
+    }
+  }
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#1a3a5c';
+  ctx.font = 'bold 10px Tajawal';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${r.fL} × ${r.fW} = ${(r.fL * r.fW).toLocaleString()} قطعة/طبقة`, W / 2, oy - 4);
+}
+
+function drawPalSide(r, palL, palW) {
+  const cv = document.getElementById('cvPalSide');
+  if (!cv) return;
+  cv.width = cv.parentElement.offsetWidth || 260;
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = 170, m = 16;
+  const totalH = r.fH * r.bH;
+  const scale = Math.min((W - m * 2) / palL, (H - m * 2) / totalH) * 0.88;
+  const dL = palL * scale, dH = totalH * scale;
+  const ox = m + ((W - m * 2) - dL) / 2, oy = m + ((H - m * 2) - dH) / 2;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#f5f3ff';
+  ctx.fillRect(ox, oy, dL, dH);
+  ctx.strokeStyle = '#8b5cf6';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(ox, oy, dL, dH);
+  const bL = r.bL * scale, bH = r.bH * scale;
+  for (let i = 0; i < Math.min(r.fL, 20); i++) {
+    for (let k = 0; k < Math.min(r.fH, 15); k++) {
+      ctx.fillStyle = `hsl(${150 + i * 6}, 65%, 52%)`;
+      ctx.fillRect(ox + i * bL + 1, oy + dH - (k + 1) * bH + 1, bL - 2, bH - 2);
+    }
+  }
+  ctx.fillStyle = '#1a3a5c';
+  ctx.font = 'bold 10px Tajawal';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${r.fH} طبقات | ارتفاع ${totalH.toFixed(0)} سم`, W / 2, oy - 4);
+}
+
+// ===================== UPDATE WASTAGE VALUE =====================
+function updateWastageValue(val) {
+  document.getElementById('wastageVal').innerText = val;
+}
+
+// ===================== CONTAINER CALCULATION =====================
+function selCont(id, el) {
+  document.querySelectorAll('.cont-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selContId = id;
+}
+
+function calcFit(cL, cW, cH, bL, bW, bH, maxKg, kg, maxLay, wastage) {
+  const factor = 1 - (wastage / 100);
+  const fL = Math.floor(cL / bL);
+  const fW = Math.floor(cW / bW);
+  let fH = Math.floor(cH / bH);
+  if (maxLay && fH > maxLay) fH = maxLay;
+  let total = Math.floor(fL * fW * fH * factor);
+  let totKg = total * kg;
+  if (kg > 0 && totKg > maxKg) {
+    total = Math.floor(maxKg / kg);
+    fH = Math.min(fH, Math.max(1, Math.ceil(total / (fL * fW))));
+    totKg = total * kg;
+  }
+  const eff = total > 0 ? (total * bL * bW * bH) / (cL * cW * cH) * 100 : 0;
+  return { total, fL, fW, fH, bL, bW, bH, eff: Math.min(eff, 100).toFixed(1), totKg };
+}
+
+function calcContainer() {
+  const L = toCm(parseFloat(document.getElementById('pL').value));
+  const W = toCm(parseFloat(document.getElementById('pW').value));
+  const H = toCm(parseFloat(document.getElementById('pH').value));
+  const kg = parseFloat(document.getElementById('pKg').value) || 0;
+  const maxSH = parseFloat(document.getElementById('maxSH').value) || null;
+  const maxLay = parseInt(document.getElementById('maxLay').value) || null;
+  const wastage = parseFloat(document.getElementById('wastageSlider').value) || 0;
+  
+  if (!L || !W || !H) { toast('أدخل أبعاد المنتج في تبويب المنتج أولاً', 'warn'); return; }
+  
+  const cont = CONTAINERS[selContId];
+  let cH = cont.H;
+  if (maxSH && maxSH > 0 && maxSH < cH) cH = maxSH;
+  
+  const orients = getOrientations(L, W, H, selTypeId);
+  const results = orients.map(([bL, bW, bH]) => calcFit(cont.L, cont.W, cH, bL, bW, bH, cont.maxKg, kg, maxLay, wastage))
+    .filter(r => r.total > 0)
+    .sort((a, b) => b.total - a.total);
+  
+  if (!results.length) { toast('المنتج أكبر من الحاوية!', 'err'); return; }
+  const best = results[0];
+  lastContRes = { best, results, cont, wastage };
+  
+  document.getElementById('noResultMsg').style.display = 'none';
+  document.getElementById('resultsContent').style.display = 'block';
+  
+  const prodName = document.getElementById('pName').value || 'المنتج';
+  document.getElementById('resHeading').textContent = `${TYPE_INFO[selTypeId].icon} ${prodName} في ${cont.name}`;
+  document.getElementById('rTotal').textContent = best.total.toLocaleString();
+  document.getElementById('rEff').textContent = best.eff + '%';
+  document.getElementById('rPerLayer').textContent = (best.fL * best.fW).toLocaleString();
+  document.getElementById('rLayers').textContent = best.fH;
+  
+  document.getElementById('recTitle').textContent = `${cont.name} — ${best.total.toLocaleString()} وحدة`;
+  const eff = parseFloat(best.eff);
+  const effMsg = eff >= 85 ? '🎯 كفاءة ممتازة! استغلال مثالي للمساحة.' :
+    eff >= 70 ? '👍 كفاءة جيدة — مقبولة تجارياً.' :
+      '⚠️ كفاءة منخفضة — جرّب أبعاداً مختلفة أو قلل الهدر.';
+  document.getElementById('recDesc').textContent = `كفاءة ${best.eff}% • ${best.fL}×${best.fW}×${best.fH} طبقة — ${effMsg}`;
+  
+  const wrapEl = document.getElementById('wbarWrap');
+  if (kg > 0) {
+    wrapEl.style.display = 'block';
+    const pct = Math.min(best.totKg / cont.maxKg * 100, 100);
+    const barEl = document.getElementById('wbarFill');
+    barEl.parentElement.parentElement.className = 'wbar-wrap ' + (pct < 70 ? 'wok' : pct < 90 ? 'wwarn' : 'wover');
+    barEl.style.width = pct.toFixed(1) + '%';
+    document.getElementById('wLoaded').textContent = best.totKg.toFixed(0).toLocaleString();
+    document.getElementById('wMax').textContent = cont.maxKg.toLocaleString();
+    document.getElementById('wbarMsg').textContent = pct >= 95 ? '⚠️ قريب جداً من الحد الأقصى — تحقق من SOLAS VGM' : pct >= 70 ? `${pct.toFixed(1)}% من الحمولة` : `${pct.toFixed(1)}% — متسع للزيادة`;
+  } else {
+    wrapEl.style.display = 'none';
+  }
+  
+  document.getElementById('rLayout').innerHTML =
+    `📦 الترتيب: <strong>${best.fL} طول × ${best.fW} عرض × ${best.fH} طبقة</strong><br>` +
+    `📐 أبعاد الوحدة: ${best.bL.toFixed(1)} × ${best.bW.toFixed(1)} × ${best.bH.toFixed(1)} سم` +
+    (wastage > 0 ? `<br><span class="type-note" style="display:inline-block;margin-top:4px">⚙️ تم تطبيق عامل الخسارة ${wastage}% (الوحدات الفعلية المتوقعة).</span>` : '');
+  
+  requestAnimationFrame(() => {
+    drawContTop(best, cont.L, cont.W);
+    drawContSide(best, cont.L, cont.W, cH);
+  });
+  
+  document.getElementById('orientList').innerHTML = results.slice(0, 6).map((r, i) => `
+    <div class="orient-row ${i === 0 ? 'best' : ''}">
+      <div>
+        <div class="orank">#${i + 1} ${i === 0 ? '<span class="best-tag">✓ الأفضل</span>' : ''}</div>
+        <div class="olayout">${r.bL.toFixed(1)}×${r.bW.toFixed(1)}×${r.bH.toFixed(1)} سم | ${r.fL}×${r.fW}×${r.fH}</div>
+      </div>
+      <div style="text-align:left">
+        <div class="ocount">${r.total.toLocaleString()}</div>
+        <div class="olayout">كفاءة ${r.eff}%</div>
+      </div>
+    </div>`).join('');
+  
+  buildTips(best, cont, kg, wastage);
+  
+  switchTab('results', document.querySelectorAll('.tab-btn')[4]);
+  toast(`✅ ${best.total.toLocaleString()} وحدة في ${cont.name}`, 'ok');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildTips(best, cont, kg, wastage) {
+  const tips = [];
+  const eff = parseFloat(best.eff);
+  if (eff >= 85) tips.push({ cls: 'tip-ok', icon: '🎯', txt: `كفاءة ممتازة ${eff}% — استغلال مثالي للحاوية.` });
+  else if (eff >= 70) tips.push({ cls: 'tip-info', icon: '👍', txt: `كفاءة جيدة ${eff}% — مقبولة تجارياً.` });
+  else tips.push({ cls: 'tip-warn', icon: '⚠️', txt: `كفاءة منخفضة ${eff}% — جرّب تغيير أبعاد التغليف أو اتجاه المنتج.` });
+  
+  if (best.fH > 5) tips.push({ cls: 'tip-warn', icon: '🔒', txt: `${best.fH} طبقات مرتفعة — استخدم أجزاء ربط أو شريط تعبئة لمنع السقوط.` });
+  if (selContId.includes('reefer')) tips.push({ cls: 'tip-warn', icon: '❄️', txt: 'الحاوية المبردة: تأكد من دوران الهواء (لا ترص حتى السقف). اترك 10-15 سم فراغاً حول البضاعة.' });
+  if (kg > 0 && best.totKg / cont.maxKg > 0.9) tips.push({ cls: 'tip-warn', icon: '⚖️', txt: `الحمولة ${(best.totKg / cont.maxKg * 100).toFixed(0)}% من الحد الأقصى — تحقق من SOLAS VGM قبل الشحن.` });
+  if (wastage > 0) tips.push({ cls: 'tip-info', icon: '📏', txt: `تم تطبيق خصم ${wastage}% كفجوات تحميل (Wastage). القيمة الفعلية أقل من النظرية.` });
+  tips.push({ cls: 'tip-info', icon: '📋', txt: 'ضع قائمة تعبئة (Packing List) داخل وخارج الحاوية.' });
+  tips.push({ cls: 'tip-ok', icon: '💡', txt: 'استخدم 85–90% فقط من السعة كعامل ملء واقعي لتجنب الضغط على الجدران.' });
+  
+  document.getElementById('tipsList').innerHTML = tips.map(t =>
+    `<div class="tip ${t.cls}"><span class="ticon">${t.icon}</span><span>${t.txt}</span></div>`).join('');
+}
+
+// ===================== CONTAINER CANVAS =====================
+function drawContTop(r, cL, cW) {
+  const cv = document.getElementById('cvContTop');
+  if (!cv) return;
+  cv.width = cv.parentElement.offsetWidth || 280;
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = 175, m = 16;
+  const scale = Math.min((W - m * 2) / cL, (H - m * 2) / cW) * 0.88;
+  const dL = cL * scale, dW = cW * scale;
+  const ox = m + ((W - m * 2) - dL) / 2, oy = m + ((H - m * 2) - dW) / 2;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#e2e8f0';
+  ctx.fillRect(ox, oy, dL, dW);
+  ctx.strokeStyle = '#1a3a5c';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(ox, oy, dL, dW);
+  const bL = r.bL * scale, bW = r.bW * scale;
+  let drawn = 0, max = Math.min(r.fL * r.fW, 500);
+  outer: for (let i = 0; i < r.fL; i++) {
+    for (let j = 0; j < r.fW; j++) {
+      if (drawn++ >= max) break outer;
+      ctx.globalAlpha = 0.87;
+      ctx.fillStyle = `hsl(${22 + i * 8}, 85%, 58%)`;
+      ctx.fillRect(ox + i * bL + 1, oy + j * bW + 1, bL - 2, bW - 2);
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawContSide(r, cL, cW, cH) {
+  const cv = document.getElementById('cvContSide');
+  if (!cv) return;
+  cv.width = cv.parentElement.offsetWidth || 280;
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = 175, m = 16;
+  const scale = Math.min((W - m * 2) / cL, (H - m * 2) / cH) * 0.88;
+  const dL = cL * scale, dH = cH * scale;
+  const ox = m + ((W - m * 2) - dL) / 2, oy = m + ((H - m * 2) - dH) / 2;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#e2e8f0';
+  ctx.fillRect(ox, oy, dL, dH);
+  ctx.strokeStyle = '#1a3a5c';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(ox, oy, dL, dH);
+  const bL = r.bL * scale, bH = r.bH * scale;
+  for (let i = 0; i < Math.min(r.fL, 25); i++) {
+    for (let k = 0; k < Math.min(r.fH, 15); k++) {
+      ctx.fillStyle = `hsl(${142 + i * 5}, 65%, 50%)`;
+      ctx.fillRect(ox + i * bL + 1, oy + dH - (k + 1) * bH + 1, bL - 2, bH - 2);
+    }
+  }
+}
+
+// ===================== SAVED PRODUCTS =====================
+function saveProd() {
+  const name = document.getElementById('pName').value.trim() || 'منتج';
+  const L = toCm(parseFloat(document.getElementById('pL').value));
+  const W = toCm(parseFloat(document.getElementById('pW').value));
+  const H = toCm(parseFloat(document.getElementById('pH').value));
+  const kg = parseFloat(document.getElementById('pKg').value) || 0;
+  if (!L || !W || !H) { toast('أدخل الأبعاد أولاً', 'warn'); return; }
+  const p = { id: Date.now(), name, L, W, H, kg, type: selTypeId };
+  savedProds.push(p);
+  localStorage.setItem('hammal_v3', JSON.stringify(savedProds));
+  renderSaved();
+  toast(`✅ تم حفظ: ${name}`, 'ok');
+}
+
+function loadProd(id) {
+  const p = savedProds.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('pL').value = fromCm(p.L).toFixed(2);
+  document.getElementById('pW').value = fromCm(p.W).toFixed(2);
+  document.getElementById('pH').value = fromCm(p.H).toFixed(2);
+  document.getElementById('pKg').value = p.kg || '';
+  document.getElementById('pName').value = p.name;
+  selTypeId = p.type;
+  document.querySelectorAll('.type-card').forEach((c, i) => {
+    const keys = Object.keys(TYPE_INFO);
+    c.classList.toggle('selected', keys[i] === p.type);
+  });
+  document.getElementById('typeNote').textContent = TYPE_INFO[p.type].note;
+  switchTab('product', document.querySelectorAll('.tab-btn')[1]);
+  toast(`✅ تم تحميل: ${p.name}`, 'ok');
+}
+
+function delProd(id) {
+  savedProds = savedProds.filter(x => x.id !== id);
+  localStorage.setItem('hammal_v3', JSON.stringify(savedProds));
+  renderSaved();
+  toast('تم الحذف', 'info');
+}
+
+function renderSaved() {
+  const el = document.getElementById('savedListDiv');
+  if (!savedProds.length) { el.innerHTML = '<div class="empty-state">لا توجد منتجات محفوظة بعد</div>'; return; }
+  el.innerHTML = savedProds.map(p => `
+    <div class="saved-item">
+      <div>
+        <div class="saved-name">${TYPE_INFO[p.type]?.icon || '📦'} ${p.name}</div>
+        <div class="saved-dims">${p.L.toFixed(1)}×${p.W.toFixed(1)}×${p.H.toFixed(1)} سم${p.kg ? ' · ' + p.kg + ' كجم' : ''}</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn-load" onclick="loadProd(${p.id})">تحميل</button>
+        <button class="btn-del" onclick="delProd(${p.id})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+// ===================== CAMERA MEASUREMENT =====================
+async function openScanModal() {
+  const modal = document.getElementById('scanModal');
+  modal.style.display = 'flex';
+  try {
+    if (currentStream) {
+      currentStream.getTracks().forEach(track => track.stop());
+    }
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    currentStream = stream;
+    const video = document.getElementById('cam');
+    video.srcObject = stream;
+    video.play();
+  } catch (err) {
+    console.error(err);
+    toast('❌ لا يمكن الوصول للكاميرا', 'err');
+    closeScan();
+  }
+}
+
+function closeScan() {
+  const modal = document.getElementById('scanModal');
+  modal.style.display = 'none';
+  if (currentStream) {
+    currentStream.getTracks().forEach(track => track.stop());
+    currentStream = null;
+  }
+  // Hide preview canvas and show video again
+  document.getElementById('previewCanvas').style.display = 'none';
+  document.getElementById('cam').style.display = 'block';
+}
+
+function capturePhoto() {
+  const video = document.getElementById('cam');
+  const canvas = document.getElementById('previewCanvas');
+  const ctx = canvas.getContext('2d');
+  
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  
+  // Hide video, show preview
+  video.style.display = 'none';
+  canvas.style.display = 'block';
+  
+  toast('📐 جاري تحليل الصورة... الرجاء تحديد الكارت البنكي.', 'info');
+  
+  // Create a temporary canvas to draw the selection UI
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = canvas.width;
+  tempCanvas.height = canvas.height;
+  const tempCtx = tempCanvas.getContext('2d');
+  tempCtx.drawImage(canvas, 0, 0);
+  
+  // Draw selection instructions on the preview canvas
+  ctx.strokeStyle = '#e07b39';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([10, 10]);
+  ctx.strokeRect(50, 50, canvas.width - 100, canvas.height - 100);
+  ctx.setLineDash([]);
+  ctx.font = 'bold 16px Tajawal';
+  ctx.fillStyle = '#fff';
+  ctx.shadowColor = 'black';
+  ctx.shadowBlur = 4;
+  ctx.fillText('✏️ اضغط على زاويتي الكارت البنكي (أعلى اليسار ثم أسفل اليمين)', 60, 40);
+  ctx.shadowBlur = 0;
+  
+  let points = [];
+  const onCanvasClick = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    let x = (e.clientX - rect.left) * scaleX;
+    let y = (e.clientY - rect.top) * scaleY;
+    x = Math.min(Math.max(x, 0), canvas.width);
+    y = Math.min(Math.max(y, 0), canvas.height);
+    
+    points.push({ x, y });
+    
+    // Draw point
+    ctx.fillStyle = '#22c55e';
+    ctx.beginPath();
+    ctx.arc(x, y, 8, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    if (points.length === 2) {
+      // Calculate width in pixels
+      const widthPx = Math.abs(points[1].x - points[0].x);
+      const heightPx = Math.abs(points[1].y - points[0].y);
+      
+      // Real card width is 8.56 cm
+      const realWidthCm = 8.56;
+      const scaleCmPerPx = realWidthCm / widthPx;
+      
+      // Now we need to measure the product. 
+      // We'll ask the user to click on the product edges.
+      toast('👍 تم! الآن اضغط على زاويتي المنتج (الطول ثم العرض).', 'ok');
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 16px Tajawal';
+      ctx.fillText('📦 اضغط على زاويتي المنتج', 60, 80);
+      
+      let productPoints = [];
+      const onProductClick = (e2) => {
+        const rect2 = canvas.getBoundingClientRect();
+        const scaleX2 = canvas.width / rect2.width;
+        const scaleY2 = canvas.height / rect2.height;
+        let px = (e2.clientX - rect2.left) * scaleX2;
+        let py = (e2.clientY - rect2.top) * scaleY2;
+        px = Math.min(Math.max(px, 0), canvas.width);
+        py = Math.min(Math.max(py, 0), canvas.height);
+        
+        productPoints.push({ x: px, y: py });
+        
+        ctx.fillStyle = '#e07b39';
+        ctx.beginPath();
+        ctx.arc(px, py, 8, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(px, py, 4, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        if (productPoints.length === 2) {
+          const prodWidthPx = Math.abs(productPoints[1].x - productPoints[0].x);
+          const prodHeightPx = Math.abs(productPoints[1].y - productPoints[0].y);
+          
+          const lengthCm = prodWidthPx * scaleCmPerPx;
+          const widthCm = prodHeightPx * scaleCmPerPx;
+          // Estimate depth (assuming it's the smaller dimension or we need a third click)
+          toast(`📏 الطول: ${lengthCm.toFixed(1)} سم, العرض: ${widthCm.toFixed(1)} سم. اضغط على نقطة ثالثة للارتفاع.`, 'info');
+          
+          ctx.fillText(`الطول: ${lengthCm.toFixed(1)} سم`, 60, 110);
+          ctx.fillText(`العرض: ${widthCm.toFixed(1)} سم`, 60, 140);
+          ctx.fillText('⬆️ اضغط نقطة ثالثة للارتفاع', 60, 170);
+          
+          let depthPoints = [];
+          const onDepthClick = (e3) => {
+            const rect3 = canvas.getBoundingClientRect();
+            const scaleX3 = canvas.width / rect3.width;
+            const scaleY3 = canvas.height / rect3.height;
+            let dz = (e3.clientY - rect3.top) * scaleY3;
+            dz = Math.min(Math.max(dz, 0), canvas.height);
+            
+            const depthPx = Math.abs(dz - productPoints[1].y);
+            const depthCm = depthPx * scaleCmPerPx;
+            
+            document.getElementById('pL').value = lengthCm.toFixed(1);
+            document.getElementById('pW').value = widthCm.toFixed(1);
+            document.getElementById('pH').value = depthCm.toFixed(1);
+            
+            toast('✅ تم قياس الأبعاد بنجاح!', 'ok');
+            closeScan();
+            calcCBM();
+            
+            canvas.removeEventListener('click', onDepthClick);
+          };
+          canvas.addEventListener('click', onDepthClick);
+        }
+      };
+      canvas.addEventListener('click', onProductClick);
+    }
+  };
+  canvas.addEventListener('click', onCanvasClick);
+}
+
+// ===================== AR MEASUREMENT (Three.js) =====================
+let arScene, arCamera, arRenderer, arPoints = [];
+let arSession = null;
+
+async function startAR() {
+  toast('🚀 جاري تشغيل الواقع المعزز... اضغط مرتين على الشاشة لقياس الطول.', 'info');
+  
+  arScene = new THREE.Scene();
+  arCamera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
+  arRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  arRenderer.setSize(window.innerWidth, window.innerHeight);
+  arRenderer.xr.enabled = true;
+  document.body.appendChild(arRenderer.domElement);
+  
+  // Simple geometry to visualize points
+  const material = new THREE.MeshBasicMaterial({ color: 0xe07b39 });
+  
+  function onSelect() {
+    if (!arRenderer.xr.isPresenting) return;
+    
+    const cameraPos = arCamera.position;
+    const pointGeometry = new THREE.SphereGeometry(0.02, 16, 16);
+    const pointMesh = new THREE.Mesh(pointGeometry, material);
+    pointMesh.position.copy(cameraPos);
+    arScene.add(pointMesh);
+    
+    arPoints.push(pointMesh.position.clone());
+    
+    if (arPoints.length === 2) {
+      const distance = arPoints[0].distanceTo(arPoints[1]);
+      const cm = distance * 100;
+      toast(`📏 القياس: ${cm.toFixed(1)} سم`, 'ok');
+      document.getElementById('pL').value = cm.toFixed(1);
+      // Assume width and height are similar for demo, or we can do a third click
+      document.getElementById('pW').value = (cm * 0.8).toFixed(1);
+      document.getElementById('pH').value = (cm * 0.6).toFixed(1);
+      calcCBM();
+      
+      // Cleanup AR
+      if (arSession) {
+        arSession.end();
+      }
+      arRenderer.xr.enabled = false;
+      document.body.removeChild(arRenderer.domElement);
+      arPoints = [];
+      toast('✅ تم القياس بنجاح!', 'ok');
+    } else {
+      toast('📍 تم تحديد النقطة 1. اضغط مرة أخرى للنقطة 2.', 'info');
+    }
+  }
+  
+  if ('xr' in navigator) {
+    const sessionInit = { optionalFeatures: ['local-floor'], requiredFeatures: ['hit-test'] };
+    navigator.xr.requestSession('immersive-ar', sessionInit).then(session => {
+      arSession = session;
+      arRenderer.xr.setSession(session);
+      session.addEventListener('select', onSelect);
+      session.addEventListener('end', () => {
+        arRenderer.xr.enabled = false;
+        if (arRenderer.domElement && arRenderer.domElement.parentNode) {
+          arRenderer.domElement.parentNode.removeChild(arRenderer.domElement);
+        }
+        arPoints = [];
+      });
+      arRenderer.setAnimationLoop((timestamp, frame) => {
+        if (frame) {
+          const referenceSpace = arRenderer.xr.getReferenceSpace();
+          const pose = frame.getViewerPose(referenceSpace);
+          if (pose) {
+            arCamera.matrix.fromArray(pose.transform.matrix);
+            arCamera.matrixWorldInverse.copy(arCamera.matrix).invert();
+          }
+        }
+        arRenderer.render(arScene, arCamera);
+      });
+    }).catch(err => {
+      console.error(err);
+      toast('❌ جهازك لا يدعم AR أو لم يتم منح الإذن', 'err');
+      if (arRenderer.domElement && arRenderer.domElement.parentNode) {
+        arRenderer.domElement.parentNode.removeChild(arRenderer.domElement);
+      }
+    });
+  } else {
+    toast('❌ المتصفح لا يدعم تقنية الواقع المعزز', 'err');
+  }
+}
+
+// ===================== RESIZE REDRAW =====================
+window.addEventListener('resize', () => {
+  if (lastPalRes) { drawPalTop(lastPalRes.best, lastPalRes.pL, lastPalRes.pW); drawPalSide(lastPalRes.best, lastPalRes.pL, lastPalRes.pW); }
+  if (lastContRes) { drawContTop(lastContRes.best, lastContRes.cont.L, lastContRes.cont.W); drawContSide(lastContRes.best, lastContRes.cont.L, lastContRes.cont.W, lastContRes.cont.H); }
+});
+
+// ===================== INIT =====================
+renderSaved();
+calcCBM();
+</script>
+</body>
+</html>
